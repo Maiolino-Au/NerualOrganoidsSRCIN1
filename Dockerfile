@@ -2,23 +2,17 @@
 # ENV DEBIAN_FRONTEND=noninteractive
 # RUN apt-get -y update && apt-get -y upgrade && apt-get -y install r-base
 FROM satijalab/seurat:5.0.0
-
-RUN apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
+RUN apt-get -y install gdebi-core wget apt-transport-https ca-certificates curl gnupg lsb-release
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common dirmngr gpg curl build-essential \
-    gdebi-core wget libudunits2-dev libgdal-dev gfortran fort77 \
+    libudunits2-dev libgdal-dev gfortran fort77 pandoc git nano \
     xorg-dev liblzma-dev libblas-dev gobjc++ aptitude libbz2-dev \
     libpcre3-dev libreadline-dev libcurl4-openssl-dev libssl-dev \
     libgit2-dev libharfbuzz-dev libfribidi-dev cmake libcurl4-gnutls-dev \
     libxml2-dev libcairo2-dev libfontconfig1-dev libfreetype6-dev \
     libpng-dev libtiff5-dev libjpeg-dev make libxt-dev liblapack-dev \
-    sudo zlib1g-dev libncurses5-dev pandoc git nano && \
+    sudo zlib1g-dev libncurses5-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # RUN wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2023.12.1-402-amd64.deb
