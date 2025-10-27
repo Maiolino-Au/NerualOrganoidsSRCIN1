@@ -1,8 +1,8 @@
-# FROM ubuntu
-# ENV DEBIAN_FRONTEND=noninteractive
-# RUN apt-get -y update && apt-get -y upgrade && apt-get -y install r-base
-FROM satijalab/seurat:5.0.0
-#RUN apt-get -y install gdebi-core wget apt-transport-https ca-certificates curl gnupg lsb-release
+FROM ubuntu
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get -y update && apt-get -y upgrade && apt-get -y install r-base
+# FROM satijalab/seurat:5.0.0
+# RUN apt-get -y install gdebi-core wget apt-transport-https ca-certificates curl gnupg lsb-release
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common dirmngr gpg curl build-essential \
