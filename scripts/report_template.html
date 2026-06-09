@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        @page {
+            size: a4;
+            margin: 1cm;
+        }
+
+        body {
+            font-family: sans-serif;
+            font-size: 10px;
+        }
+
+        .page-break {
+            page-break-before: always;
+            /* Fix: Forces a new page before this div starts */
+        }
+
+        /* Fix: Added missing CSS for the top full-width image */
+        .full-width-img {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .full-width-img img {
+            width: 100%;
+            height: auto;
+        }
+
+        .img-table {
+            width: 100%;
+        }
+
+        .img-table td {
+            width: 50%;
+            /* Fix: Set to 50% for proper side-by-side layout */
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .img-table img {
+            width: 250px;
+            /* Fix: Use explicit pixels to prevent xhtml2pdf crashes */
+            height: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .data-table th,
+        .data-table td {
+            border: 1px solid #999;
+            padding: 4px;
+            text-align: center;
+        }
+
+        .data-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <!--    <h1 style="text-align: center; font-size: 4em;">Report Organoidi 2024</h1>
+    <h2 style="text-align: center; font-size: 1.5em;">By Aurelio Maiolino</h2>
+
+    <p style="text-align: left;">Re-analysis of the data from Uzquiano et. al., 2022
+        (https://doi.org/10.1016/j.cell.2022.09.010)
+    </p> -->
+
+    {% for month, rows in data_frames.items() %}
+    <div class="{% if not loop.first %}page-break{% endif %}">
+        <h1 style="text-align: center; font-size: 2.5em;">Month {{ month }} - Resolution: level 3</h1>
+
+        <div class="full-width-img">
+            <h3>Annotated UMAP</h3>
+            <img src="figures/umap_{{ month }}month_annot_level_3_rev2.png">
+        </div>
+
+        <table class="img-table">
+            <tr>
+                <td><img src="figures/umap_{{ month }}month_SRCIN1.png"><br>SRCIN1 UMAP</td>
+                <td><img src="figures/violin_{{ month }}month_SRCIN1_annot_level_3_rev2.png"><br>SRCIN1 Violin</td>
+            </tr>
+        </table>
+
+        <table class="data-table">
+            <tr>
+                {% for col in columns %}
+                <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in rows %}
+            <tr>
+                {% for col in columns %}
+                <td style="{{ get_color_style(row[col], col) }}">
+                    {{ row[col] }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endfor %}
+</body>
+
+</html>
