@@ -1,0 +1,28 @@
+name: py_env
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - pip
+  - setuptools
+  - numpy>=1.26.4
+  - cython
+  - scipy
+  - pandas
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - gimmemotifs
+  - anndata>=0.12.2
+  - scanpy>=1.10
+  - ipykernel
+  - pybedtools
+  - bedtools
+  - leidenalg
+  - louvain
+  - hnswlib
+  - jupyterlab
+  - plotly
