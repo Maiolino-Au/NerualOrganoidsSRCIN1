@@ -31,7 +31,8 @@ RUN micromamba create -y -f /tmp/environment.yml && \
 RUN micromamba run -n py_env pip install --upgrade setuptools pip
 RUN micromamba run -n py_env pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 RUN micromamba run -n py_env pip install scvi-tools hnoca matplotlib-inline==0.1.6
-RUN micromamba run -n py_env pip install cellrank petsc4py slepc4py
+RUN micromamba install -n py_env -c conda-forge petsc4py slepc4py -y
+RUN micromamba run -n py_env pip install cellrank
 RUN micromamba clean --all --yes
 
 # 3. Register the kernel
