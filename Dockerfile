@@ -36,6 +36,9 @@ RUN micromamba run -n py_env pip install --upgrade setuptools pip && \
     micromamba run -n py_env pip install 'jupyterhub>=4.0' 'jupyterlab>=4.0' 'notebook' && \
     micromamba clean --all --yes
 
+RUN micromamba run -n py_env pip install petsc4py slepc4py 
+RUN micromamba clean --all --yes
+
 # 3. Register the kernel
 RUN micromamba run -n py_env python -m ipykernel install \
     --name py_env \
