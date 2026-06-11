@@ -33,7 +33,7 @@ RUN micromamba create -y -f /tmp/environment.yml && \
 RUN micromamba run -n py_env pip install --upgrade setuptools pip && \
     micromamba run -n py_env pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 && \
     micromamba run -n py_env pip install scvi-tools hnoca matplotlib-inline==0.1.6 cellrank && \
-    micromamba run -n py_env pip install 'jupyterhub-singleuser>=4.0' 'jupyterlab>=4.0' 'notebook' && \
+    micromamba run -n py_env pip install 'jupyterhub>=4.0' 'jupyterlab>=4.0' 'notebook' && \
     micromamba clean --all --yes
 
 # 3. Register the kernel
