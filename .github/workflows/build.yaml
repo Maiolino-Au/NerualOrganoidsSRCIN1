@@ -1,6 +1,8 @@
 name: Build
 on:
   release:
+    types: [published] # Fixes the multiple build issue
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +17,6 @@ jobs:
           git describe --tags --exact-match || echo "No exact tag"
           git status
 
-      # 🧹 Optional pre-cleanup (useful if previous runs left data)
       - name: Pre-clean Docker space
         run: |
           docker system prune -af || true
@@ -33,7 +34,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/maiolino-au/neuralorganoidssrcin1/
+          images: ghcr.io/maiolino-au/neuralorganoidssrcin1
           tags: |
             type=semver,pattern=v{{version}}
             type=raw,value=latest
@@ -43,14 +44,12 @@ jobs:
         with:
           context: .
           push: true
-          tags: |
-            ghcr.io/maiolino-au/neuralorganoidssrcin1:latest
-            ghcr.io/maiolino-au/neuralorganoidssrcin1:${{ steps.meta.outputs.version }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          provenance: false # Fixes the "unknown blob" error
 
-      # 🧼 Post-build cleanup to free space
       - name: Clean up Docker space
-        if: always()   # ensures this runs even if the build fails
+        if: always()
         run: |
           docker system prune -af || true
           docker volume prune -f || true
