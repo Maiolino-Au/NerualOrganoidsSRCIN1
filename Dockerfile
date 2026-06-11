@@ -15,7 +15,9 @@ RUN apt-get update && apt-get install -y \
     htop \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy environment files (optional future extension)
+# Create the standard 'jovyan' user early
+RUN useradd -m jovyan
+
 WORKDIR /workspace
 
 ########################################
@@ -27,12 +29,12 @@ COPY environment.yml /tmp/environment.yml
 RUN micromamba create -y -f /tmp/environment.yml && \
     micromamba clean --all --yes
 
-# 2. Explicitly install pip packages
-RUN micromamba run -n py_env pip install --upgrade setuptools pip
-RUN micromamba run -n py_env pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-RUN micromamba run -n py_env pip install scvi-tools hnoca matplotlib-inline==0.1.6
-RUN micromamba run -n py_env pip install cellrank
-RUN micromamba clean --all --yes
+# 2. Explicitly install pip packages & JupyDo requirements
+RUN micromamba run -n py_env pip install --upgrade setuptools pip && \
+    micromamba run -n py_env pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 && \
+    micromamba run -n py_env pip install scvi-tools hnoca matplotlib-inline==0.1.6 cellrank && \
+    micromamba run -n py_env pip install 'jupyterhub-singleuser>=4.0' 'jupyterlab>=4.0' 'notebook' && \
+    micromamba clean --all --yes
 
 # 3. Register the kernel
 RUN micromamba run -n py_env python -m ipykernel install \
@@ -40,15 +42,19 @@ RUN micromamba run -n py_env python -m ipykernel install \
     --display-name "Python"
 
 ########################################
-# Cleanup
+# Permissions & User Switch
 ########################################
-RUN micromamba clean --all --yes
+# Ensure jovyan owns the required directories
+RUN chown -R jovyan:jovyan /workspace /opt/conda
+
+USER jovyan
+ENV HOME=/home/jovyan
+WORKDIR $HOME
 
 ########################################
-# Expose port and launch JupyterLab
+# Expose port and launch JupyDo Server
 ########################################
 EXPOSE 8888
 
-WORKDIR /
-ENV SHELL=/bin/bash
-CMD ["micromamba", "run", "-n", "py_env", "jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--ServerApp.allow_origin=*", "--ServerApp.token="]
+# Wrap the JupyDo command in micromamba to ensure it runs inside py_env
+CMD ["micromamba", "run", "-n", "py_env", "jupyterhub-singleuser", "--allow-root"]
