@@ -1,3 +1,5 @@
+# Dockerfile to make the image compatible with jupido
+
 FROM ghcr.io/maiolino-au/neuralorganoidssrcin1:v1.0.3
 
 USER root
