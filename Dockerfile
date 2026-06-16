@@ -33,6 +33,7 @@ RUN micromamba run -n py_env pip install torch torchvision torchaudio --index-ur
 RUN micromamba run -n py_env pip install scvi-tools hnoca matplotlib-inline==0.1.6
 RUN micromamba install -n py_env -c conda-forge petsc4py slepc4py -y
 RUN micromamba run -n py_env pip install cellrank
+RUN micromamba install -n py_env -c conda-forge xhtml2pdf -y
 RUN micromamba clean --all --yes
 
 # 3. Register the kernel
