@@ -1,13 +1,22 @@
 # Title?
 
 
-## Environment
+The analyses where done inside a python based docker container started from the image available at 
+```
+docker pull ghcr.io/maiolino-au/neuralorganoidssrcin1:v1.0.3
+```
+A JupyDo compatible version is available at 
+```
+docker pull ghcr.io/maiolino-au/neuralorganoidssrcin1:v1.1.0
+```
 
+The following scripts where used:
+* Preprocessing &rarr; [01_preprocessing.py](scripts/01_preprocessing.py)
+* Cell type annotation &rarr; [02_celltype_annotations.py](scripts/02_celltype_annotations.py)
+* Analyses &rarr; [test_03-04_all.ipynb](NUC_notebooks/test_03-04_all.ipynb)
+  * This includes various plots, differentially expressed genes, and trajectory inference
 
-## Code
-
-
-## Single Cell RNA sequencing Analyses
+## Methods: Single Cell RNA sequencing Analyses
 Single-cell RNA sequencing (scRNA-seq) data from [Uzquiano A. et al., 2022](https://doi.org/10.1016/j.cell.2022.09.010), comprising human neural organoids generated with Velasco's protocol CIT24  sampled at 1, 2, 3, 4, 5, and 6 months, were downloaded [here](https://singlecell.broadinstitute.org/single_cell/study/SCP1756/cortical-organoids-atlas?genes=SRCIN1&cluster=1month%20scRNA-seq&spatialGroups=1month%20Org1%20Slide-seq%2C1month%20Org2%20Slide-seq%2C1month%20Org3%20Slide-seq%2C1month%20Org4%20Slide-seq&annotation=CellType--group--cluster&subsample=all&tab=distribution#study-download). Computational analyses were conducted in Python (v3.11) within a Docker container built upon mambaorg/micromamba:1.5.8.
 
 Preprocessing utilized scanpy (v1.10) and anndata (v0.12.16). Doublets were identified and removed using the SOLO algorithm via scvi-tools (v1.4.2). Quality control excluded genes expressed in fewer than 3 cells, cells expressing fewer than 400 genes, and low-quality cells exhibiting >20% mitochondrial transcripts or falling within the top 2% of total counts. Raw counts were normalized to 10,000 counts per cell, log1p-transformed, and scaled to a maximum value of 10 after regressing out mitochondrial and ribosomal counts. Dimensionality reduction was performed via Principal Component Analysis (PCA). A neighborhood graph was constructed using 30 principal components, and cells were clustered using the Leiden algorithm (resolution = 1.0). Cell type annotation was performed by transferring labels from [The Human Neural Organoid Atlas (HNOA)](https://doi.org/10.1038/s41586-024-08172-8) via the ingest function based on PCA embeddings.
